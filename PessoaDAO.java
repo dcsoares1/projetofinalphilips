@@ -22,9 +22,7 @@ public class PessoaDAO {
    public void salvar(ModelPessoa pessoa){
        connect.conexao();
        try {
-            PreparedStatement pst = connect.conn.prepareStatement(
-                    "insert into pessoa (cd_pessoa, nm_pessoa, cpf_pessoa, sexo_pessoa, est_civil_pessoa, telefone_pessoa, dtn_pessoa)"
-                            + " values (cd_pessoa.nextval,?,?,?,?,?,?)");
+            PreparedStatement pst = connect.conn.prepareCall("{call insere_pessoa(?,?,?,?,?,?)}");                    
             pst.setString(1, pessoa.getNome());
             pst.setString(2, pessoa.getCpf());
             pst.setString(3, pessoa.getSexo());
@@ -61,14 +59,14 @@ public class PessoaDAO {
    public void editar (ModelPessoa mod) {
         connect.conexao();
         try {
-            PreparedStatement pst = connect.conn.prepareStatement("update pessoa set nm_pessoa=?, cpf_pessoa=?, sexo_pessoa= ?, est_civil_pessoa =?, telefone_pessoa= ?, dtn_pessoa= ? where cd_pessoa = ? ");
-            pst.setString(1, pessoa.getNome());
-            pst.setString(2, pessoa.getCpf());
-            pst.setString(3, pessoa.getSexo());
-            pst.setString(4, pessoa.getEstCivil());
-            pst.setString(5, pessoa.getTelefone());
-            pst.setString(6, pessoa.getDtn());
-            pst.setInt(7, pessoa.getCod());
+            PreparedStatement pst = connect.conn.prepareCall("{call atualiza_pessoa (?,?,?,?,?,?,?)}");
+            pst.setInt(1, mod.getCod());
+            pst.setString(2, mod.getNome());
+            pst.setString(3, mod.getCpf());
+            pst.setString(4, mod.getSexo());
+            pst.setString(5, mod.getEstCivil());
+            pst.setString(6, mod.getTelefone());
+            pst.setString(7, mod.getDtn());           
             pst.execute();
             JOptionPane.showMessageDialog(null, "Dados alterados com sucesso!");
         } catch (SQLException ex) {
@@ -80,11 +78,11 @@ public class PessoaDAO {
     public void deletarPac(ModelPessoa model){        
         connect.conexao();
         try {
-            PreparedStatement pst = connect.conn.prepareStatement("delete from pessoa where cd_pessoa =?");
+            PreparedStatement pst = connect.conn.prepareStatement("{call exclui_pessoa (?)}");
             pst.setInt(1, model.getCod());
             pst.execute();            
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao excluir Dados");
+            JOptionPane.showMessageDialog(null, "Erro ao excluir Dados" + ex);
         }        
         connect.desconectar();
     }
