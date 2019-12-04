@@ -53,7 +53,7 @@ public class AgendamentoDAO {
             connPaciente.rs.first();
             codPac = connPaciente.rs.getInt("cd_pessoa");            
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Paciente não encontrado" + ex);
+            JOptionPane.showMessageDialog(null, "Paciente não encontrado");
         }     
     }
 
